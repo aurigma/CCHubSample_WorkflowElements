@@ -1,12 +1,12 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-top: 53px;
+  margin: 0;
+  width: 100%;
 }
 
 .body {
   overflow-y: auto;
   height: calc(100vh - 53px);
+  margin-top: 53px;
   position: relative;
   padding: 0 10px;
 }

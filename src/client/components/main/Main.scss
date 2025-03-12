@@ -1,9 +1,10 @@
 .main {
     &__samples {
+        max-width: 960px;
         padding: 20px 0;
+        margin: 0 auto;
         &-title {
-            margin-top: 64px;
-            margin-bottom: 32px;
+            padding-bottom: 32px;
             font-weight: 500;
             font-size: 24pt;
             text-align: left;
@@ -12,12 +13,9 @@
         &-list {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 40px;
 
-            &__item {
-
-                margin-bottom: 16px;
-                
+            &__item {                
                 &-title {
                     cursor: pointer;
                     font-size: 16pt;

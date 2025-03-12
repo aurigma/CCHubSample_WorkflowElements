@@ -10,3 +10,7 @@ export interface GetProductInfoOutput {
     cchubApiGatewayUrl: string,
     storefrontId: number
 }
+
+export interface PrepareDesignTemplate {
+    privateDesignId: string 
+}

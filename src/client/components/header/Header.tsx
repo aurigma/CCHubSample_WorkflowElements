@@ -6,7 +6,7 @@ const Header = () => {
   const location = useLocation();
 
   return (
-    <div className="header">
+    <div className="navbar">
       <Logo />
       { location.pathname !== "/" ? <a href="/">Back to samples</a> : null}
     </div>

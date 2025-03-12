@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import Preloader from "../components/preloader/Preloader.js";
-import { loadScript, loadStyle } from "../shared/asset-loaders.js";
-import { SimpleEditorBaseUrl } from "../constants/urls.js";
+import { loadWorkflowElement } from "../shared/asset-loaders.js";
 import { ServerApiService } from "../shared/server-api-service.js";
 import { simpleEditorBasicSampleSettings } from "../constants/configuration.js"
+import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
+import Header from "../components/header/Header.js";
 
 const SimpleEditorBasic = () => {
 
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isComponentLoaded, setIsComponentLoaded] = useState(false);
   const userId = "testUserId42";
-  const orderId = "42"; 
+  const orderId = "42";
 
   useEffect(() => {
 
@@ -23,10 +24,7 @@ const SimpleEditorBasic = () => {
       // - Having multiple instances of SE on one page may be a problem. That's why a cleanup is recommended.
       // - You may want using different editors for different products, that's why you may want dynamically determine 
       // which script to load. 
-      const [style, script] = await Promise.all([
-        loadStyle(`${SimpleEditorBaseUrl}/styles.css`), 
-        loadScript(`${SimpleEditorBaseUrl}/index.js`)
-      ]);
+      const [style, script] = await loadWorkflowElement(getWorkflowElementUrl(WorkflowElementType.SimpleEditor));
 
       setIsScriptLoaded(true);
 
@@ -99,7 +97,7 @@ const SimpleEditorBasic = () => {
           simpleEditor.showLoader(false);
           alert(`You have successfully created a project ${project.id} (name '${project.name}').`);
         });
-        
+
       })()
     }
   }, [isScriptLoaded]);
@@ -115,11 +113,15 @@ const SimpleEditorBasic = () => {
   });
 
   return (
-    <div className="simple-editor">
-      <Preloader isActive={!isComponentLoaded}></Preloader>
-      <au-simple-editor></au-simple-editor>
+    <div className="main">
+      <Header />
+      <div className="body">
+        <div className="simple-editor">
+          <Preloader isActive={!isComponentLoaded}></Preloader>
+          <au-simple-editor></au-simple-editor>
+        </div>
+      </div>
     </div>
-
   );
 }
 
