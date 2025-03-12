@@ -1,22 +1,15 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import axios, { AxiosResponse } from 'axios';
 import { ApiClientConfiguration, StorefrontUsersApiClient, StorefrontUserDto, ProjectsApiClient, CreateProjectByRenderHiResScenarioDto, RenderHiResScenarioOutputColorSpace, RenderHiResScenarioOutputFormat, RenderHiResScenarioOutputFlipMode } from "@aurigma/axios-storefront-api-client";
+import { CCHubAuth } from "./cchub-auth.js";
 
+export class CCHubStorefrontApiService {
 
-interface AuthClientGrantResponse {
-    "access_token": string,
-    "expires_in": number,
-    "token_type": string,
-    "scope": string
-}
+    private readonly config: CCHubConfiguration;
+    private readonly authService: CCHubAuth;
 
-
-export class CCHubService {
-
-    private config: CCHubConfiguration;
-
-    constructor(config: CCHubConfiguration) {
+    constructor(config: CCHubConfiguration, authService: CCHubAuth) {
         this.config = config;
+        this.authService = authService;
     }
 
     /**
@@ -100,7 +93,7 @@ export class CCHubService {
      * @returns API client for StorefrontUsers controller.
      */
     private async initStorefrontUsersApiClient(): Promise<StorefrontUsersApiClient> {
-        const apiClientConfig = await this.initApiClientConfiguration("StorefrontUsers_full");
+        const apiClientConfig = await this.initApiClientConfiguration();
         
         return new StorefrontUsersApiClient(apiClientConfig);
     }
@@ -124,8 +117,8 @@ export class CCHubService {
      * @param scope  Access token scope (i.e. permissions). 
      * @returns An API Configuration object which can be used to init API Clients for all controllers.
      */
-    private async initApiClientConfiguration(scope: string) {
-        const accessToken = await this.getAccessToken(scope);
+    private async initApiClientConfiguration(scope?: string) {
+        const accessToken = await this.authService.getAccessToken(scope);
 
         const apiClientConfig = new ApiClientConfiguration();
         apiClientConfig.setAuthorizationToken(accessToken);
@@ -133,39 +126,5 @@ export class CCHubService {
 
         return apiClientConfig;
     }
-    
 
-    /**
-     * Receives Customer's Canvas access token through OAuth2 Client Credentials flow. 
-     * 
-     * Refer [Auth docs](https://customerscanvas.com/dev/backoffice/auth.html#requesting-an-access-token-for-the-client-credentials-flow) for details. 
-     * 
-     * @param scope Access token scope (i.e. permissions). Refer Discovery document for available values (see the Auth article).
-     * @returns An access token for a specific Client Credentials configured in Customer's Canvas.
-     */
-    private async getAccessToken(scope: string): Promise<string> {
-        const authUrl = `${this.config.baseUrl}/connect/token`;
-
-        try {
-            const response: AxiosResponse<AuthClientGrantResponse> = await axios.post(
-                authUrl,
-                {
-                    "client_id": this.config.clientId,
-                    "client_secret": this.config.clientSecret,
-                    "grant_type": "client_credentials",
-                    "scope": scope
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    }
-                }
-            );   
-
-            return response.data.access_token;
-        } catch (e) {
-            throw new Error(`Failed to authenticate. Server responded - ${e}`);
-            
-        }
-    }
 }

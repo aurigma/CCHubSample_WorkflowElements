@@ -1,4 +1,4 @@
-export async function loadScript(scriptName: string): Promise<HTMLScriptElement> {
+async function loadScript(scriptName: string): Promise<HTMLScriptElement> {
     return new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = scriptName;
@@ -17,7 +17,7 @@ export async function loadScript(scriptName: string): Promise<HTMLScriptElement>
     });
 }
 
-export async function loadStyle(styleName: string): Promise<HTMLLinkElement> {
+async function loadStyle(styleName: string): Promise<HTMLLinkElement> {
     return new Promise((resolve, reject) => {
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -25,7 +25,12 @@ export async function loadStyle(styleName: string): Promise<HTMLLinkElement> {
 
         link.onload = () => resolve(link);
         link.onerror = () => reject(new Error(`Failed to load CSS: ${styleName}`));
-        
+
         document.head.appendChild(link);
     });
 }
+
+export const loadWorkflowElement = async (baseUrl: string) => await Promise.all([
+    loadStyle(`${baseUrl}/styles.css`),
+    loadScript(`${baseUrl}/index.js`)
+]);
