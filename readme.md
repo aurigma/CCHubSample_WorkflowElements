@@ -4,9 +4,14 @@ This is code example illustrating how to authenticate in Customer's Canvas Hub, 
 
 ## Get started
 
+### System requirements
+
+This code was built and tested with NodeJS 20.17.0. If you run into any problems compiling this project, 
+check your NodeJS version and upgrade it if necessary. 
+
 ### Configuration
 
-Once you clone this repo, you need to configure the **.env** file. To do it, create a copy based on the **.env.sample** and then add your Customer's Canvas details there. 
+Once you clone this repo, you need to configure the **.env** file. To do it, create a copy based on the **.env.sample**, rename it to **.env**, and then add your Customer's Canvas details there. 
 
 The environment variables are divided into two groups: common variables available on the backend only and the
 variables available on the frontend (typically, specific for certain samples). The latter have the `VITE_` prefix.
@@ -27,6 +32,10 @@ Samples illustrating how to load editors without PIM module:
 - `VITE_NOPIMSAMPLE_CCHUB_PUBLICDESIGNID` - a public design ID. You can get it through admin panel (Assets > Designs) as explained at https://customerscanvas.com/help/admin-guide/manage-assets/file-manager.html#information 
 - `VITE_NOPIMSAMPLE_CCHUB_EDITORMOCKUPID` - a comma-separated list of mockup IDs for the editor. You can get ID through admin panel (Assets > Mockups) as explained at https://customerscanvas.com/help/admin-guide/manage-assets/file-manager.html#information
 - `VITE_NOPIMSAMPLE_CCHUB_PREVIEWMOCKUPID` - a comma-separated list of mockup IDs for the preview. You can get ID through admin panel (Assets > Mockups) as explained at https://customerscanvas.com/help/admin-guide/manage-assets/file-manager.html#information 
+
+Sample illustrating how to work with Template Editor:
+
+- `VITE_TEMPLATEEDITOR_CCHUB_PUBLICDESIGNID` - a public design ID to open in Template Editor.
 
 ### Install and run
 

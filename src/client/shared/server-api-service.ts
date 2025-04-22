@@ -15,12 +15,21 @@ export class ServerApiService {
         return token;
     };
 
+    static getTemplateEditorPublicDesign = () => import.meta.env["VITE_TEMPLATEEDITOR_CCHUB_PUBLICDESIGNID"]; 
+
     static getProductInfo = async (): Promise<GetProductInfoOutput> => {
         const response: AxiosResponse<GetProductInfoOutput> = await axios.get(`/api/get-product-info/`);
         response.data.productId = import.meta.env["VITE_BASICSAMPLE_CCHUB_PRODUCTID"]; 
         
         return response?.data;
     };
+
+    static savePublicDesign = async (id: string, serializedDesignModel: object): Promise<ProjectDto> => {
+        return axios.post("/api/save-public-design", {
+            serializedDesignModel,
+            id,
+          });
+    }
 
     static saveProject = async (body: SaveProjectInput): Promise<ProjectDto> => {
         const response: AxiosResponse<ProjectDto> = await axios.post("/api/save-project/", body);

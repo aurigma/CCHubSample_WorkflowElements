@@ -18,7 +18,7 @@ const HandyEditorBasic = () => {
             //
             // Technically, you can just add scripts and styles statically. However, the following
             // considerations should be taken into account: 
-            // - Having multiple instances of SE on one page may be a problem. That's why a cleanup is recommended.
+            // - Having multiple instances of Handy Editor on one page may be a problem. That's why a cleanup is recommended.
             // - You may want using different editors for different products, that's why you may want dynamically determine 
             // which script to load. 
             const [style, script] = await loadWorkflowElement(getWorkflowElementUrl(WorkflowElementType.HandyEditor));

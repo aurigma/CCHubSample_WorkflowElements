@@ -4,6 +4,7 @@ import Main from "./components/main/Main";
 import SimpleEditorBasic from "./samples/SimpleEditorBasic";
 import HandyEditorBasic from "./samples/HandyEditorBasic";
 import HandyEditorNoPIM from "./samples/HandyEditorNoPIM";
+import TemplateEditor from "./samples/TemplateEditor";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/SimpleEditorBasic" element={<SimpleEditorBasic />} />
         <Route path="/HandyEditorBasic" element={<HandyEditorBasic />} />
         <Route path="/HandyEditorNoPIM" element={<HandyEditorNoPIM />} />
+        <Route path="/TemplateEditor" element={<TemplateEditor />} />
       </Routes>
     </Router>
   );

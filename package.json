@@ -9,9 +9,9 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@aurigma/axios-asset-processor-api-client": "^2.65.10",
-    "@aurigma/axios-design-atoms-api-client": "^2.65.12",
-    "@aurigma/axios-storefront-api-client": "^2.51.1",
+    "@aurigma/axios-asset-processor-api-client": "^2.67.1",
+    "@aurigma/axios-design-atoms-api-client": "^2.67.1",
+    "@aurigma/axios-storefront-api-client": "^2.53.1",
     "axios": "^1.7.9",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",

@@ -60,6 +60,19 @@ app.post("/api/save-project/", async (req, res) => {
   res.json(project);
 });
 
+app.post("/api/save-public-design/", async (req, res) => {
+  const { serializedDesignModel, id } = req.body;
+  
+  try {
+    await designAtomsService.savePublicDesign(id, serializedDesignModel);
+  } catch (error) {
+    res.status(500)
+    res.send(error);
+  } finally {
+    res.end();
+  }
+})
+
 
 ViteExpress.listen(app, 3000, () =>
   console.log("Server is listening on port 3000..."),

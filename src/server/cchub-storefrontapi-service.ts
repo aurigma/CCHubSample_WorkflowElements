@@ -61,7 +61,7 @@ export class CCHubStorefrontApiService {
                 format: RenderHiResScenarioOutputFormat.Pdf
             }
         };
-        console.log(createProjectDto);
+        
         return await projectsApiClient.createByRenderHiResScenario(this.config.storefrontId, null, createProjectDto)
     }
 

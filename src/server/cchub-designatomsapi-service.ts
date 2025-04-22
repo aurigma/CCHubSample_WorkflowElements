@@ -1,5 +1,5 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import { ApiClientConfiguration, DesignAtomsServiceApiClient, SetEditorMockupsModel } from "@aurigma/axios-design-atoms-api-client";
+import { ApiClientConfiguration, DesignAtomsServiceApiClient, SetEditorMockupsModel, DesignAtomsPrintProductApiClient } from "@aurigma/axios-design-atoms-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
 
 export class CCHubDesignAtomsApiService {
@@ -33,6 +33,30 @@ export class CCHubDesignAtomsApiService {
                     editorMockupBindings: editorMockupsModel
                 } as SetEditorMockupsModel);    
         }
+    }
+
+    /**
+     * Saves changes into public design
+     * 
+     * @param designId - Public design id
+     * @param designJson - Object of serialized design model
+     */
+    public async savePublicDesign(designId: string, serializedDesignModel: string): Promise<void> {
+        const apiClient = await this.initDesignAtomsPrintProductApiClient("Assets_full");
+
+        return apiClient.updateDesignProductModel(designId, null, undefined, serializedDesignModel);
+    }
+
+    /**
+     * Initializes the API Client for DesignAtomsApi service.
+     * 
+     * @param scope Access token scope (i.e. permissions). 
+     * @returns API client for DesignAtomsPrintProduct controller
+     */
+    private async initDesignAtomsPrintProductApiClient(scope: string): Promise<DesignAtomsPrintProductApiClient> {
+        const configuration = await this.initApiClientConfiguration(scope);
+
+        return new DesignAtomsPrintProductApiClient(configuration);
     }
 
     /**
