@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { loadWorkflowElement } from "../shared/asset-loaders.js";
 import { ServerApiService } from "../shared/server-api-service.js";
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
-import axios from "axios";
 import "./TemplateEditor.scss";
 import Logo from "../components/logo/Logo.js";
+import { IImageResolution } from "../interfaces/template-editor.js";
 
 const TemplateEditor = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [editor, setEditor] = useState<any>(null);
+  const [saveIsDisabled, setSaveIsDisabled] = useState<boolean>(false);
   const userId = "testUserId42";
 
   useEffect(() => {
@@ -100,9 +101,18 @@ const TemplateEditor = () => {
             },
           },
         });
+
+        templateEditor?.addEventListener("change", () => {
+          const resolutionCheckResults: IImageResolution[] =
+            templateEditor.getImagesResolution();
+          const hasBadCheckResult = resolutionCheckResults
+            .map((checkResult) => checkResult.qualityState)
+            .includes("Bad");
+          setSaveIsDisabled(hasBadCheckResult);
+        });
       })();
     }
-  }, [isScriptLoaded]);
+  }, [isScriptLoaded, setSaveIsDisabled]);
 
   const initIntegrationData = (
     tenantId: number,
@@ -126,11 +136,12 @@ const TemplateEditor = () => {
   const saveDesign = useCallback(async () => {
     const serializedDesignModel = editor.getSerializedDesignModel();
     try {
-      // This code sets the destination design ID the same as the source 
-      // design ID. This way the design will be overwritten. 
-      // If you would like to create a copy instead of overwriting, 
+      // This code sets the destination design ID the same as the source
+      // design ID. This way the design will be overwritten.
+      // If you would like to create a copy instead of overwriting,
       // generate new GUID or another unique name.
-      const destinationDesignId = ServerApiService.getTemplateEditorPublicDesign();
+      const destinationDesignId =
+        ServerApiService.getTemplateEditorPublicDesign();
       await ServerApiService.savePublicDesign(
         destinationDesignId,
         serializedDesignModel
@@ -144,7 +155,11 @@ const TemplateEditor = () => {
   return (
     <au-template-editor>
       <div head-buttons="true">
-        <button className="save-button" onClick={saveDesign}>
+        <button
+          className="save-button"
+          disabled={saveIsDisabled}
+          onClick={saveDesign}
+        >
           Save
         </button>
       </div>
