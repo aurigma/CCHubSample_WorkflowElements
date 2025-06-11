@@ -34,7 +34,7 @@ export const simpleEditorBasicSampleSettings = {
     },
     designViewer: {
         surfaceShadowEnabled: false,
-        previewMode: true,
+        previewMode: false,
     },
 }
 

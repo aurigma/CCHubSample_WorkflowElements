@@ -5,6 +5,11 @@ export const SAMPLES = [
         path: "/SimpleEditorBasic" 
     },
     { 
+        name: "Simple Editor with Plugin Api Sample", 
+        description: "Demonstrates how to use PluginApi with Simple Editor.", 
+        path: "/SimpleEditorWithPluginApi" 
+    },
+    { 
         name: "Basic Handy Editor Sample", 
         description: "Demonstrates how to embed Handy Editor to a page and save results as a project once you finish editing.", 
         path: "/HandyEditorBasic" 

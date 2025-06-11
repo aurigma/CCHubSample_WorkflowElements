@@ -12,6 +12,8 @@
     "@aurigma/axios-asset-processor-api-client": "^2.67.1",
     "@aurigma/axios-design-atoms-api-client": "^2.67.1",
     "@aurigma/axios-storefront-api-client": "^2.53.1",
+    "@aurigma/design-atoms-model": "7.0.24",
+    "@aurigma/design-atoms": "7.1.45",
     "axios": "^1.7.9",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
