@@ -5,6 +5,9 @@ import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
 import "./TemplateEditor.scss";
 import Logo from "../components/logo/Logo.js";
 import { IImageResolution } from "../interfaces/template-editor.js";
+import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
 
 const TemplateEditor = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -153,20 +156,22 @@ const TemplateEditor = () => {
   }, [editor]);
 
   return (
-    <au-template-editor>
-      <div head-buttons="true">
-        <button
-          className="save-button"
-          disabled={saveIsDisabled}
-          onClick={saveDesign}
-        >
-          Save
-        </button>
-      </div>
-      <div head-logo="true">
-        <Logo />
-      </div>
-    </au-template-editor>
+    <>
+      <Container fluid>
+        <au-template-editor>
+    
+          <div head-buttons="true">
+            <Button
+              disabled={saveIsDisabled}
+              onClick={saveDesign}>Save
+            </Button>
+          </div>
+          <div head-logo="true">
+            <SampleAppBreadcrumb activeSamplePath={window.location.pathname} />
+          </div>
+        </au-template-editor>
+      </Container>
+    </>
   );
 };
 

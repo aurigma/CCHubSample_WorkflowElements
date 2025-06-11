@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
 import Preloader from "../components/preloader/Preloader.js";
 import { loadWorkflowElement } from "../shared/asset-loaders.js";
 import { ServerApiService } from "../shared/server-api-service.js";
 import { simpleEditorBasicSampleSettings } from "../constants/configuration.js"
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
 import Header from "../components/header/Header.js";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const SimpleEditorBasic = () => {
 
@@ -113,15 +117,19 @@ const SimpleEditorBasic = () => {
   });
 
   return (
-    <div className="main">
+    <>
       <Header />
-      <div className="body">
-        <div className="simple-editor">
-          <Preloader isActive={!isComponentLoaded}></Preloader>
-          <au-simple-editor></au-simple-editor>
-        </div>
-      </div>
-    </div>
+      <Container>
+        <SampleAppBreadcrumb activeSamplePath={window.location.pathname}/>
+        <Preloader isActive={!isComponentLoaded}></Preloader>
+        <Row>
+          <Col>
+            <au-simple-editor>
+            </au-simple-editor>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 }
 

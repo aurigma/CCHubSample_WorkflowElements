@@ -1,8 +1,12 @@
+import "./HandyEditor.scss";
+
 import { useEffect, useState } from "react";
 import { loadWorkflowElement } from "../shared/asset-loaders.js";
 import { ServerApiService } from "../shared/server-api-service.js";
 import { handyEditorBasicSampleSettings, handyEditorBasicSampleResources } from "../constants/configuration.js"
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
+import Container from "react-bootstrap/esm/Container.js";
+import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
 
 const HandyEditorNoPIM = () => {
 
@@ -133,7 +137,6 @@ const HandyEditorNoPIM = () => {
                     }
 
                     const project = await ServerApiService.saveProject(requestBody);
-                    handyEditor.showLoader(false);
                     alert(`You have successfully created a project ${project.id} (name '${project.name}').`);
                 });
 
@@ -152,7 +155,15 @@ const HandyEditorNoPIM = () => {
     });
 
     return (
-        <au-handy-editor></au-handy-editor>
+        <>
+            <Container fluid>
+                <au-handy-editor>
+                    <div logo="true">
+                        <SampleAppBreadcrumb activeSamplePath={window.location.pathname} />
+                    </div>                  
+                </au-handy-editor>
+            </Container>
+        </>
     );
 }
 

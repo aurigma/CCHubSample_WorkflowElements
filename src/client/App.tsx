@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./components/main/Main";
 import SimpleEditorBasic from "./samples/SimpleEditorBasic";
