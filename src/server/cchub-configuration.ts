@@ -6,6 +6,8 @@ export class CCHubConfiguration {
     public readonly clientSecret: string;
     public readonly tenantId: number;
 
+    public readonly tokenRefreshTimeBeforeExpirationSec: number;
+
 
     constructor() {
         this.baseUrl = process.env["CCHUB_BASEURL"] ?? "https://customerscanvashub.com";
@@ -14,5 +16,6 @@ export class CCHubConfiguration {
         this.clientId = process.env["CCHUB_CLIENTID"] ?? "";
         this.clientSecret = process.env["CCHUB_CLIENTSECRET"] ?? "";
         this.tenantId = Number(process.env["CCHUB_TENANTID"]);
+        this.tokenRefreshTimeBeforeExpirationSec = Number(process.env["CCHUB_TOKENREFRESTIMEBEFOREEXPIRATIONSEC"] ?? 60);
     }
 }

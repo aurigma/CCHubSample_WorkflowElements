@@ -24,7 +24,8 @@
     "sass": "^1.85.1",
     "tsx": "^4.3.0",
     "typescript": "^5.3.2",
-    "vite-express": "*"
+    "vite-express": "*",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

@@ -1,5 +1,5 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import { ApiClientConfiguration, StorefrontUsersApiClient, StorefrontUserDto, ProjectsApiClient, CreateProjectByRenderHiResScenarioDto, RenderHiResScenarioOutputColorSpace, RenderHiResScenarioOutputFormat, RenderHiResScenarioOutputFlipMode } from "@aurigma/axios-storefront-api-client";
+import { ApiClientConfiguration, StorefrontUsersApiClient, StorefrontUserDto, ProjectsApiClient, CreateProjectByRenderHiResScenarioDto, RenderHiResScenarioOutputColorSpace, RenderHiResScenarioOutputFormat, RenderHiResScenarioOutputFlipMode, ProductReferencesApiClient, ProductsApiClient } from "@aurigma/axios-storefront-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
 
 export class CCHubStorefrontApiService {
@@ -66,6 +66,26 @@ export class CCHubStorefrontApiService {
     }
 
     /**
+     * Gets a list of products, potentially filtered by a tag.
+     * 
+     * @param tags An array of tags to filter products by. If not specified, all products are returned.
+     * @returns A list of products.
+    */   
+    public async getProducts(tags?: string[]) {
+        const productsApiClient = await this.initProductsApiClient();
+
+        return await productsApiClient.getAllProducts(
+            null, // skip
+            null, // take
+            null, // sort 
+            null, // search 
+            null, // sku
+            tags, //tags
+            null,  // custom fields
+        );
+    }
+
+    /**
      * Get storefront user registered in Customer's Canvas based on ID from your system. Creates
      * a user if it does not exist in Customer's Canvas yet.
      * 
@@ -126,5 +146,32 @@ export class CCHubStorefrontApiService {
 
         return apiClientConfig;
     }
+
+    /**
+     * Initializes the API Client for ProductReferenceApiClient. 
+     * 
+     * Refer readme.MD in the @aurigma/axios-storefront-api-client package (e.g. in node_modules).
+     * 
+     * @returns API client for StorefrontUsers controller.
+     */
+    private async initProductReferenceApiClient(): Promise<ProductReferencesApiClient> {
+        const apiClientConfig = await this.initApiClientConfiguration("Templates_read");
+
+        return new ProductReferencesApiClient(apiClientConfig);
+    }
+
+    /**
+     * Initializes the API Client for Product. 
+     * 
+     * Refer readme.MD in the @aurigma/axios-storefront-api-client package (e.g. in node_modules).
+     * 
+     * @returns API client for StorefrontUsers controller.
+     */
+    private async initProductsApiClient(): Promise<ProductsApiClient> {
+        const apiClientConfig = await this.initApiClientConfiguration("Templates_read");
+
+        return new ProductsApiClient(apiClientConfig);
+    }
+
 
 }

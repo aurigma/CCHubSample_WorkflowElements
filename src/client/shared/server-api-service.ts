@@ -1,6 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 import { GetProductInfoOutput, PrepareDesignTemplate, SaveProjectInput } from "../interfaces/server-api";
-import { ProjectDto } from "@aurigma/axios-storefront-api-client";
+import { PagedOfProductDto, ProjectDto } from "@aurigma/axios-storefront-api-client";
+
+
+export const getProductList = async (): Promise<PagedOfProductDto> => {
+    const response = await axios.get("/api/products", {});
+    return response.data;
+}
 
 export class ServerApiService {
 
