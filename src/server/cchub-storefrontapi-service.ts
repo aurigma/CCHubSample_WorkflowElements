@@ -1,15 +1,18 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
 import { ApiClientConfiguration, StorefrontUsersApiClient, StorefrontUserDto, ProjectsApiClient, CreateProjectByRenderHiResScenarioDto, RenderHiResScenarioOutputColorSpace, RenderHiResScenarioOutputFormat, RenderHiResScenarioOutputFlipMode, ProductReferencesApiClient, ProductsApiClient } from "@aurigma/axios-storefront-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
+import { Logger } from "winston";
 
 export class CCHubStorefrontApiService {
 
     private readonly config: CCHubConfiguration;
     private readonly authService: CCHubAuth;
+    private readonly logger: Logger;
 
-    constructor(config: CCHubConfiguration, authService: CCHubAuth) {
+    constructor(config: CCHubConfiguration, authService: CCHubAuth, logger: Logger) {
         this.config = config;
         this.authService = authService;
+        this.logger = logger;
     }
 
     /**
@@ -97,10 +100,14 @@ export class CCHubStorefrontApiService {
      */
     private async getOrCreateStorefrontUser(userId: string, storefrontUsersApiClient: StorefrontUsersApiClient) {
         try {
-            return await storefrontUsersApiClient.get(userId, this.config.storefrontId);
+            this.logger.debug("Entered CCHubStorefrontApiService.getOrCreateStorefrontUser. userId: %s, storefrontId: %d", userId, this.config.storefrontId);
+            const user = await storefrontUsersApiClient.get(userId, this.config.storefrontId);
+            this.logger.debug("User %s was found (isAnonymous=%s). Tenant=%d, Storefront=%d", user.userId, user.isAnonymous, user.tenantId, user.storefrontId );
+            return user;
         }
         catch (e) {
             const createUserDto = { isAnonymous: true, storefrontUserId: userId };
+            this.logger.debug("No user with this id found. Trying to create it", e);
             return await storefrontUsersApiClient.create(this.config.storefrontId, null, createUserDto);
         }
     }

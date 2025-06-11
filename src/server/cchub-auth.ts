@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { CCHubConfiguration } from "./cchub-configuration.js";
+import { Logger } from "winston";
 
 interface AuthClientGrantResponse {
     access_token: string,
@@ -23,10 +24,17 @@ export class CCHubAuth {
 
     private config: CCHubConfiguration;
     private token: string | null;
+    private expires_at: Date;
+    private readonly logger: Logger;
 
-    constructor(config: CCHubConfiguration) {
+    constructor(config: CCHubConfiguration, logger: Logger) {
         this.config = config;
         this.token = null;
+        this.expires_at = new Date();
+        this.logger = logger;
+        if (!logger) {
+            throw new Error("Logger is required for CCHubAuth");
+        }
     }
 
     /**
@@ -38,11 +46,25 @@ export class CCHubAuth {
       * @returns An access token for a specific Client Credentials configured in Customer's Canvas.
       */
     public async getAccessToken(scope?: string): Promise<string> {
-        if (this.token == null) {
-            this.token = (await this.requestAccessToken(scope)).access_token;
+        if (this.token == null || this.isTokenExpired()) {
+            this.logger.info("Recognized than a new access token is required.");
+            const { access_token, expires_in } = await this.requestAccessToken(scope);
+            this.token = access_token;
+            this.expires_at = new Date(this.expires_at.setSeconds(expires_in));
+            this.logger.info("Updated token. Expires at %s (in %s seconds)", this.expires_at, expires_in);
         } 
 
         return this.token;
+    }
+
+    private isTokenExpired() {
+        const now = new Date();
+        const millisecondsBeforeExpiration = this.expires_at.valueOf() - now.valueOf();
+        const isExpired = (millisecondsBeforeExpiration / 1000) < this.config.tokenRefreshTimeBeforeExpirationSec;
+
+        this.logger.debug("Seconds before token expiration: %d %s", millisecondsBeforeExpiration / 1000, isExpired ? "(expired)" : "(valid)");
+
+        return isExpired;
     }
 
     /**
@@ -53,6 +75,7 @@ export class CCHubAuth {
      */
     private async requestAccessToken(scope?: string): Promise<AuthClientGrantResponse> {
         const authUrl = `${this.config.baseUrl}/connect/token`;
+        scope = undefined;
 
         try {
             const response: AxiosResponse<AuthClientGrantResponse> = await axios.post(

@@ -37,7 +37,7 @@ app.use(express.json());
 
 const config = new CCHubConfiguration();
 const cchubAuth = new CCHubAuth(config, logger);
-const cchubService = new CCHubStorefrontApiService(config, cchubAuth);
+const cchubService = new CCHubStorefrontApiService(config, cchubAuth, logger);
 const designAtomsService = new CCHubDesignAtomsApiService(config, cchubAuth);
 const assetProcessorService = new CCHubAssetProcessorService(config, cchubAuth);
 
