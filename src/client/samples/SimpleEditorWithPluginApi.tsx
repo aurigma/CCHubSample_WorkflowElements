@@ -8,6 +8,8 @@ import Header from "../components/header/Header.js";
 import { DesignAtomsColors, DesignAtomsContainers } from "../interfaces/plugin-api.js";
 import { Viewer } from "@aurigma/design-atoms";
 import { BaseItem, Surface, SurfaceContainer } from "@aurigma/design-atoms-model";
+import Container from "react-bootstrap/Container";
+import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
 
 const SimpleEditorWithPluginApi = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -167,15 +169,14 @@ const SimpleEditorWithPluginApi = () => {
   }
 
   return (
-    <div className="main">
-      <Header />
-      <div className="body">
-        <div className="simple-editor">
-          <Preloader isActive={!isComponentLoaded}></Preloader>
-          <au-simple-editor></au-simple-editor>
-        </div>
-      </div>
-    </div>
+        <>
+          <Header />
+          <Container>
+            <SampleAppBreadcrumb activeSamplePath={window.location.pathname}/>
+            <Preloader isActive={!isComponentLoaded}></Preloader>
+            <au-simple-editor></au-simple-editor>
+          </Container>
+        </>
   );
 }
 

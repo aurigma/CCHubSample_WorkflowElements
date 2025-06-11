@@ -7,10 +7,12 @@ import { handyEditorBasicSampleSettings, handyEditorBasicSampleResources } from 
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
 import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
 import Container from "react-bootstrap/Container";
+import Preloader from "../components/preloader/Preloader";
 
 const HandyEditorBasic = () => {
 
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const [isComponentLoaded, setIsComponentLoaded] = useState(false);
     const userId = "testUserId42";
     const orderId = "42";
 
@@ -74,8 +76,23 @@ const HandyEditorBasic = () => {
 
                 // Event handlers
 
+                /** Use the load event to hide a preloader */
+                handyEditor?.addEventListener("load", (e: any) => {
+                    setIsComponentLoaded(true);
+                });
 
-                /** Use the addtocart event to capture the output data from the editor 
+                /** Use the load event to report about failure */
+                handyEditor?.addEventListener("error", (e: any) => {
+                    console.log("Handy Editor error", e);
+                    alert("Something went wrong while loading the editor. Please, check dev console for details.");
+                });
+
+                /** Use the change event to detect user activity */
+                handyEditor?.addEventListener("change", (e: any) => {
+                    console.log("A user made a change to a design.");
+                });
+
+                /** Use the addtocart event to capture the output data from the editor
                  * when the user clicks Add to cart.
                  * 
                  * In this example, we submit a project to Customer's Canvas to start rendering.
@@ -111,6 +128,7 @@ const HandyEditorBasic = () => {
 
     return (
         <>
+            <Preloader isActive={!isComponentLoaded}></Preloader>
             <Container fluid>
                 <au-handy-editor>
                     <div logo="true">

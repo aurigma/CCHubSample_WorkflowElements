@@ -7,10 +7,12 @@ import { handyEditorBasicSampleSettings, handyEditorBasicSampleResources } from 
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
 import Container from "react-bootstrap/esm/Container.js";
 import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
+import Preloader from "../components/preloader/Preloader";
 
 const HandyEditorNoPIM = () => {
 
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const [isComponentLoaded, setIsComponentLoaded] = useState(false);
     const userId = "testUserId42";
     const orderId = "42";
 
@@ -119,6 +121,21 @@ const HandyEditorNoPIM = () => {
 
                 // Event handlers
 
+                /** Use the load event to hide a preloader */
+                handyEditor?.addEventListener("load", (e: any) => {
+                    setIsComponentLoaded(true);
+                });
+
+                /** Use the error event to report about failure */
+                handyEditor?.addEventListener("error", (e: any) => {
+                    console.log("Handy Editor error", e);
+                    alert("Something went wrong while loading the editor. Please, check dev console for details.");
+                });
+
+                /** Use the change event to detect user activity */
+                handyEditor?.addEventListener("change", (e: any) => {
+                    console.log("A user made a change to a design.", e);
+                });
 
                 /** Use the addtocart event to capture the output data from the editor 
                  * when the user clicks Add to cart.
@@ -156,6 +173,7 @@ const HandyEditorNoPIM = () => {
 
     return (
         <>
+            <Preloader isActive={!isComponentLoaded}></Preloader>
             <Container fluid>
                 <au-handy-editor>
                     <div logo="true">

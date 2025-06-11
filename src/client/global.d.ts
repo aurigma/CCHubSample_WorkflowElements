@@ -3,5 +3,6 @@ declare namespace JSX {
         'au-simple-editor': any;
         'au-handy-editor': any;
         'au-template-editor': any;
+        'div': any;
     }
 }

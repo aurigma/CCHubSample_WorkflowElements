@@ -8,6 +8,7 @@ import { IImageResolution } from "../interfaces/template-editor.js";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import SampleAppBreadcrumb from "../components/breadcrumb/breadcrumb.js";
+import Preloader from "../components/preloader/Preloader.js";
 
 const TemplateEditor = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -158,6 +159,7 @@ const TemplateEditor = () => {
   return (
     <>
       <Container fluid>
+        <Preloader isActive={false}></Preloader>
         <au-template-editor>
     
           <div head-buttons="true">
