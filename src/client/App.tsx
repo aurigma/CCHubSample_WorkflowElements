@@ -5,6 +5,7 @@ import SimpleEditorBasic from "./samples/SimpleEditorBasic";
 import HandyEditorBasic from "./samples/HandyEditorBasic";
 import HandyEditorNoPIM from "./samples/HandyEditorNoPIM";
 import TemplateEditor from "./samples/TemplateEditor";
+import HandyEditorContainerColors from "./samples/HandyEditorContainerColors";
 import SimpleEditorWithPluginApi from "./samples/SimpleEditorWithPluginApi";
 
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/SimpleEditorWithPluginApi" element={<SimpleEditorWithPluginApi />} />
         <Route path="/HandyEditorBasic" element={<HandyEditorBasic />} />
         <Route path="/HandyEditorNoPIM" element={<HandyEditorNoPIM />} />
+        <Route path="/HandyEditorContainerColors" element={<HandyEditorContainerColors />} />
         <Route path="/TemplateEditor" element={<TemplateEditor />} />
       </Routes>
     </Router>

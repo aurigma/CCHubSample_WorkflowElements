@@ -20,6 +20,11 @@ export const SAMPLES = [
         path: "/HandyEditorNoPIM" 
     },
     { 
+        name: "Handy Editor with container colors interaction", 
+        description: "Demonstrates how to embed Handy Editor to a page and interact with container colors.", 
+        path: "/HandyEditorContainerColors" 
+    },
+    { 
         name: "Template Editor", 
         description: "Open Template Editor from your app to modify a public design template. Note, it is supposed that it is used in a custom \"admin\" app rather than in a customer-facing application.", 
         path: "/TemplateEditor" 
