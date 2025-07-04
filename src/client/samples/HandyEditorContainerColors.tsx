@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { loadWorkflowElement } from "../shared/asset-loaders.js";
 import { ServerApiService } from "../shared/server-api-service.js";
 import { handyEditorBasicSampleSettings, handyEditorBasicSampleResources } from "../constants/configuration.js"
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
-import { Color } from "@aurigma/design-atoms-model"
+import { Color, ColorSpace, SpotColor } from "@aurigma/design-atoms-model";
+
 
 const HandyEditorContainerColors = () => {
 
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-    const [unsubscribeFn, setUnsubscribeFn] = useState<() => void>(() => void 0);
+    const [unsubscribeFn, setUnsubscribeFn] = useState<{ fn: () => void} >({ fn: () => void 0});
+    const [currentColors, setCurrentColors] = useState<Array<Color | SpotColor>>([])
     const userId = "testUserId42";
     const orderId = "42";
 
@@ -36,6 +38,11 @@ const HandyEditorContainerColors = () => {
         })();
 
     }, []);
+
+    const colorContainerChangeCb = useCallback((colors: Color[]) => {
+        console.log(`Container colors:`, colors);
+        setCurrentColors(colors);
+    }, [setCurrentColors])
 
     useEffect(() => {
         // You may load Handy Editor only once its script is ready.
@@ -81,7 +88,7 @@ const HandyEditorContainerColors = () => {
                  * */
                 handyEditor?.addEventListener("addtocart", async (e: CustomEvent) => {
                     // Finish observe colors
-                    unsubscribeFn();
+                    unsubscribeFn.fn();
                     // ability to get editor warnings as messages 
                     const violationMessages: string[] = await handyEditor.getViolationsMessages();
                     console.log(violationMessages);
@@ -106,10 +113,8 @@ const HandyEditorContainerColors = () => {
                         // Ability to get the list of container colors
                         const containerColors = await handyEditor.getContainerColors(mainContainer) as Color[];
                         // Ability to run function every time the container colors are changed
-                        const unsubscribeFn = handyEditor.observeContainerColors(mainContainer, (colors: Color[]) => {
-                            console.log(`Container colors:`, colors);
-                        });
-                        setUnsubscribeFn(unsubscribeFn);
+                        const unsubscribeFn = handyEditor.observeContainerColors(mainContainer, colorContainerChangeCb);
+                        setUnsubscribeFn({ fn: unsubscribeFn});
 
                         // A method which replaces the specified design color by another value
                         const oldColor = containerColors[0];
@@ -123,7 +128,13 @@ const HandyEditorContainerColors = () => {
                 });
             })()
         }
-    }, [isScriptLoaded]);
+    }, [isScriptLoaded, colorContainerChangeCb]);
+
+    const editHandlerFn = useCallback((color: Color) => {
+        const handyEditor = document.querySelector("au-handy-editor") as any;
+        // Call unsubscribeFn if you for some reason need to stop receiving events before the panel is closed
+        const unsubscribeFn = handyEditor.openRecolorPanel(color, (newColor: Color) => console.warn("Color was changed:", newColor));
+    },[]);
 
     const initIntegrationData = (tenantId: number, storefrontId: number, userId: string, storefrontUserToken: string, cchubApiGatewayUrl: string) => ({
         tenantId,
@@ -136,7 +147,19 @@ const HandyEditorContainerColors = () => {
     });
 
     return (
-        <au-handy-editor></au-handy-editor>
+        <au-handy-editor>
+            <div rightpanelheader="true">Container colors:</div>
+            <div rightpanelcontent="true">
+                {
+                    currentColors.map((color) => 
+                        <div>
+                            <span>{color.colorSpace === ColorSpace.Spot ? (color as SpotColor).ink.name : color.toString()} - </span>
+                            <span className="color-change-button" onClick={() => editHandlerFn(color)}>edit</span>
+                        </div>
+                    )
+                }
+            </div>
+        </au-handy-editor>
     );
 }
 
