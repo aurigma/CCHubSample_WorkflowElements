@@ -92,6 +92,7 @@ app.post("/api/save-project/", logEndpoint(logger), asyncHandler(async (req, res
 app.post("/api/save-public-design/", logEndpoint(logger), asyncHandler(async (req, res) => {
   const { serializedDesignModel, id } = req.body;
   await designAtomsService.savePublicDesign(id, serializedDesignModel);
+  res.status(200).end();
 }));
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
