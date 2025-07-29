@@ -1,1 +1,6 @@
 @use '~bootstrap/scss/bootstrap';
+
+p {
+  margin-top: revert;
+  margin-bottom: revert;
+}
