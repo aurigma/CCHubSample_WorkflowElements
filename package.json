@@ -8,12 +8,15 @@
     "start": "cross-env NODE_ENV=production tsx src/server/main.ts",
     "build": "vite build"
   },
+  "engines": {
+    "node": ">=20.17.0"
+  },
   "dependencies": {
-    "@aurigma/axios-asset-processor-api-client": "^2.67.1",
-    "@aurigma/axios-design-atoms-api-client": "^2.67.1",
-    "@aurigma/axios-storefront-api-client": "^2.53.1",
-    "@aurigma/design-atoms": "7.1.45",
-    "@aurigma/design-atoms-model": "7.0.24",
+    "@aurigma/axios-asset-processor-api-client": "^2.71.1",
+    "@aurigma/axios-design-atoms-api-client": "^2.71.1",
+    "@aurigma/axios-storefront-api-client": "^2.57.1",
+    "@aurigma/design-atoms": "7.1.58",
+    "@aurigma/design-atoms-model": "7.0.28",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.6",
     "cross-env": "^7.0.3",
