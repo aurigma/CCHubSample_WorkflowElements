@@ -110,6 +110,12 @@ const HandyEditorBasic = () => {
 
                     const project = await ServerApiService.saveProject(requestBody);
                     alert(`You have successfully created a project ${project.id} (name '${project.name}').`);
+                    /**
+                     * You can navigate to another page of your site (for example, to the shopping cart page),
+                     * after `addtocard` event and performing other actions.
+                     * Here we use native JS to navigate to the home page. If necessary, you can use the navigation tools of the framework you are working with.
+                     */
+                    window.location.href = "/";
                 });
 
             })()
