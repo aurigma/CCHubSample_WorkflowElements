@@ -1,5 +1,5 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import { ApiClientConfiguration, PrivateDesignProcessorApiClient } from "@aurigma/axios-asset-processor-api-client";
+import AssetProcessorApiClient from "@aurigma/axios-asset-processor-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
 
 export class CCHubAssetProcessorService {
@@ -32,10 +32,10 @@ export class CCHubAssetProcessorService {
      * 
      * @returns API client for PrivateDesignProcessorApiClient controller.
      */
-    private async initPrivateDesignProcessorApiClient(): Promise<PrivateDesignProcessorApiClient> {
+    private async initPrivateDesignProcessorApiClient(): Promise<AssetProcessorApiClient.PrivateDesignProcessorApiClient> {
         const apiClientConfig = await this.initApiClientConfiguration("Assets_read Private_assets_full");
 
-        return new PrivateDesignProcessorApiClient(apiClientConfig);
+        return new AssetProcessorApiClient.PrivateDesignProcessorApiClient(apiClientConfig);
     }
 
     /**
@@ -47,7 +47,7 @@ export class CCHubAssetProcessorService {
     private async initApiClientConfiguration(scope: string) {
         const accessToken = await this.authService.getAccessToken(scope);
 
-        const apiClientConfig = new ApiClientConfiguration();
+        const apiClientConfig = new AssetProcessorApiClient.ApiClientConfiguration();
         apiClientConfig.setAuthorizationToken(accessToken);
         apiClientConfig.apiUrl = this.config.apiUrl;
 

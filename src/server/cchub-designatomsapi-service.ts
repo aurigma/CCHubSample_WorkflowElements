@@ -1,5 +1,5 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import { ApiClientConfiguration, DesignAtomsServiceApiClient, SetEditorMockupsModel, DesignAtomsPrintProductApiClient } from "@aurigma/axios-design-atoms-api-client";
+import DesignAtomsApiClient from "@aurigma/axios-design-atoms-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
 
 export class CCHubDesignAtomsApiService {
@@ -31,7 +31,7 @@ export class CCHubDesignAtomsApiService {
                 undefined,
                 {
                     editorMockupBindings: editorMockupsModel
-                } as SetEditorMockupsModel);    
+                } as DesignAtomsApiClient.SetEditorMockupsModel);    
         }
     }
 
@@ -53,10 +53,10 @@ export class CCHubDesignAtomsApiService {
      * @param scope Access token scope (i.e. permissions). 
      * @returns API client for DesignAtomsPrintProduct controller
      */
-    private async initDesignAtomsPrintProductApiClient(scope: string): Promise<DesignAtomsPrintProductApiClient> {
+    private async initDesignAtomsPrintProductApiClient(scope: string): Promise<DesignAtomsApiClient.DesignAtomsPrintProductApiClient> {
         const configuration = await this.initApiClientConfiguration(scope);
 
-        return new DesignAtomsPrintProductApiClient(configuration);
+        return new DesignAtomsApiClient.DesignAtomsPrintProductApiClient(configuration);
     }
 
     /**
@@ -66,10 +66,10 @@ export class CCHubDesignAtomsApiService {
      * 
      * @returns API client for StorefrontUsers controller.
      */
-    private async initDesignAtomsServiceApiClient(): Promise<DesignAtomsServiceApiClient> {
+    private async initDesignAtomsServiceApiClient(): Promise<DesignAtomsApiClient.DesignAtomsServiceApiClient> {
         const apiClientConfig = await this.initApiClientConfiguration("Assets_read Private_assets_full");
         
-        return new DesignAtomsServiceApiClient(apiClientConfig);
+        return new DesignAtomsApiClient.DesignAtomsServiceApiClient(apiClientConfig);
     }
 
     /**
@@ -81,7 +81,7 @@ export class CCHubDesignAtomsApiService {
     private async initApiClientConfiguration(scope: string) {
         const accessToken = await this.authService.getAccessToken(scope);
         
-        const apiClientConfig = new ApiClientConfiguration();
+        const apiClientConfig = new DesignAtomsApiClient.ApiClientConfiguration();
         apiClientConfig.setAuthorizationToken(accessToken);
         apiClientConfig.apiUrl = this.config.apiUrl;
 

@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { GetProductInfoOutput, PrepareDesignTemplate, SaveProjectInput } from "../interfaces/server-api";
-import { PagedOfProductDto, ProjectDto } from "@aurigma/axios-storefront-api-client";
+import StorefrontApiClient from "@aurigma/axios-storefront-api-client";
 
 
-export const getProductList = async (): Promise<PagedOfProductDto> => {
+export const getProductList = async (): Promise<StorefrontApiClient.PagedOfProductDto> => {
     const response = await axios.get("/api/products", {});
     return response.data;
 }
@@ -30,15 +30,15 @@ export class ServerApiService {
         return response?.data;
     };
 
-    static savePublicDesign = async (id: string, serializedDesignModel: object): Promise<ProjectDto> => {
+    static savePublicDesign = async (id: string, serializedDesignModel: object): Promise<StorefrontApiClient.ProjectDto> => {
         return axios.post("/api/save-public-design", {
             serializedDesignModel,
             id,
           });
     }
 
-    static saveProject = async (body: SaveProjectInput): Promise<ProjectDto> => {
-        const response: AxiosResponse<ProjectDto> = await axios.post("/api/save-project/", body);
+    static saveProject = async (body: SaveProjectInput): Promise<StorefrontApiClient.ProjectDto> => {
+        const response: AxiosResponse<StorefrontApiClient.ProjectDto> = await axios.post("/api/save-project/", body);
         return response?.data;
     }
 

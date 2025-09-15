@@ -1,5 +1,5 @@
 import { CCHubConfiguration } from "./cchub-configuration.js";
-import { ApiClientConfiguration, StorefrontUsersApiClient, StorefrontUserDto, ProjectsApiClient, CreateProjectByRenderHiResScenarioDto, RenderHiResScenarioOutputColorSpace, RenderHiResScenarioOutputFormat, RenderHiResScenarioOutputFlipMode, ProductReferencesApiClient, ProductsApiClient } from "@aurigma/axios-storefront-api-client";
+import StorefrontApiClient from "@aurigma/axios-storefront-api-client";
 import { CCHubAuth } from "./cchub-auth.js";
 import { Logger } from "winston";
 
@@ -47,7 +47,7 @@ export class CCHubStorefrontApiService {
     public async saveProjectInCCHub(privateDesignId: string, userId: string, orderId: string) {
         const projectsApiClient = await this.initProjectsApiClient();
 
-        const createProjectDto: CreateProjectByRenderHiResScenarioDto = {
+        const createProjectDto: StorefrontApiClient.CreateProjectByRenderHiResScenarioDto = {
             ownerId: userId,
             name: "Project for Order #" + orderId,
             orderDetails: {
@@ -58,10 +58,10 @@ export class CCHubStorefrontApiService {
             scenario: {
                 designId: privateDesignId,
                 anonymousAccess: true,
-                colorSpace: RenderHiResScenarioOutputColorSpace.Cmyk,
+                colorSpace: StorefrontApiClient.RenderHiResScenarioOutputColorSpace.Cmyk,
                 dpi: 300,
-                flipMode: RenderHiResScenarioOutputFlipMode.None,
-                format: RenderHiResScenarioOutputFormat.Pdf
+                flipMode: StorefrontApiClient.RenderHiResScenarioOutputFlipMode.None,
+                format: StorefrontApiClient.RenderHiResScenarioOutputFormat.Pdf
             }
         };
         
@@ -98,7 +98,7 @@ export class CCHubStorefrontApiService {
      * @param storefrontUsersApiClient An API client.
      * @returns A user DTO.
      */
-    private async getOrCreateStorefrontUser(userId: string, storefrontUsersApiClient: StorefrontUsersApiClient) {
+    private async getOrCreateStorefrontUser(userId: string, storefrontUsersApiClient: StorefrontApiClient.StorefrontUsersApiClient) {
         try {
             this.logger.debug("Entered CCHubStorefrontApiService.getOrCreateStorefrontUser. userId: %s, storefrontId: %d", userId, this.config.storefrontId);
             const user = await storefrontUsersApiClient.get(userId, this.config.storefrontId);
@@ -119,10 +119,10 @@ export class CCHubStorefrontApiService {
      * 
      * @returns API client for StorefrontUsers controller.
      */
-    private async initStorefrontUsersApiClient(): Promise<StorefrontUsersApiClient> {
+    private async initStorefrontUsersApiClient(): Promise<StorefrontApiClient.StorefrontUsersApiClient> {
         const apiClientConfig = await this.initApiClientConfiguration();
         
-        return new StorefrontUsersApiClient(apiClientConfig);
+        return new StorefrontApiClient.StorefrontUsersApiClient(apiClientConfig);
     }
 
         /**
@@ -132,10 +132,10 @@ export class CCHubStorefrontApiService {
      * 
      * @returns API client for StorefrontUsers controller.
      */
-        private async initProjectsApiClient(): Promise<ProjectsApiClient> {
+        private async initProjectsApiClient(): Promise<StorefrontApiClient.ProjectsApiClient> {
             const apiClientConfig = await this.initApiClientConfiguration("Projects_full Private_assets_full");
             
-            return new ProjectsApiClient(apiClientConfig);
+            return new StorefrontApiClient.ProjectsApiClient(apiClientConfig);
         }
     
     /**
@@ -147,7 +147,7 @@ export class CCHubStorefrontApiService {
     private async initApiClientConfiguration(scope?: string) {
         const accessToken = await this.authService.getAccessToken(scope);
 
-        const apiClientConfig = new ApiClientConfiguration();
+        const apiClientConfig = new StorefrontApiClient.ApiClientConfiguration();
         apiClientConfig.setAuthorizationToken(accessToken);
         apiClientConfig.apiUrl = this.config.apiUrl;
 
@@ -161,10 +161,10 @@ export class CCHubStorefrontApiService {
      * 
      * @returns API client for StorefrontUsers controller.
      */
-    private async initProductReferenceApiClient(): Promise<ProductReferencesApiClient> {
+    private async initProductReferenceApiClient(): Promise<StorefrontApiClient.ProductReferencesApiClient> {
         const apiClientConfig = await this.initApiClientConfiguration("Templates_read");
 
-        return new ProductReferencesApiClient(apiClientConfig);
+        return new StorefrontApiClient.ProductReferencesApiClient(apiClientConfig);
     }
 
     /**
@@ -174,10 +174,10 @@ export class CCHubStorefrontApiService {
      * 
      * @returns API client for StorefrontUsers controller.
      */
-    private async initProductsApiClient(): Promise<ProductsApiClient> {
+    private async initProductsApiClient(): Promise<StorefrontApiClient.ProductsApiClient> {
         const apiClientConfig = await this.initApiClientConfiguration("Templates_read");
 
-        return new ProductsApiClient(apiClientConfig);
+        return new StorefrontApiClient.ProductsApiClient(apiClientConfig);
     }
 
 
