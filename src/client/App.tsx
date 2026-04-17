@@ -7,7 +7,7 @@ import HandyEditorNoPIM from "./samples/HandyEditorNoPIM";
 import TemplateEditor from "./samples/TemplateEditor";
 import HandyEditorContainerColors from "./samples/HandyEditorContainerColors";
 import SimpleEditorWithPluginApi from "./samples/SimpleEditorWithPluginApi";
-
+import UIFramework from "./samples/UI-framework";
 
 function App() {
 
@@ -21,6 +21,7 @@ function App() {
         <Route path="/HandyEditorNoPIM" element={<HandyEditorNoPIM />} />
         <Route path="/HandyEditorContainerColors" element={<HandyEditorContainerColors />} />
         <Route path="/TemplateEditor" element={<TemplateEditor />} />
+        <Route path="/UIFramework" element={<UIFramework />} />
       </Routes>
     </Router>
   );

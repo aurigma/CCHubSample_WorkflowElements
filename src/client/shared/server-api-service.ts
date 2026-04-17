@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { GetProductInfoOutput, PrepareDesignTemplate, SaveProjectInput } from "../interfaces/server-api";
-import { PagedOfProductDto, ProjectDto } from "@aurigma/axios-storefront-api-client";
+import { PagedOfProductDto, PersonalizationParametersDto, ProjectDto } from "@aurigma/axios-storefront-api-client";
 
 
 export const getProductList = async (): Promise<PagedOfProductDto> => {
@@ -49,6 +49,12 @@ export class ServerApiService {
             mockupIds
         };
         const response: AxiosResponse<PrepareDesignTemplate> = await axios.post("/api/prepare-design-template/", body);
+        return response?.data;
+    }
+
+    static getPersonalizationParameters = async (ref: string): Promise<PersonalizationParametersDto> => {
+        const response = await axios.get(`/api/personalization-parameters/${ref}`);
+
         return response?.data;
     }
 }
