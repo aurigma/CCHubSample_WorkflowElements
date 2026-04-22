@@ -68,6 +68,11 @@ app.get("/api/get-product-info/", logEndpoint(logger), asyncHandler(async (req, 
   });
 }));
 
+app.get("/api/personalization-parameters/:ref", logEndpoint(logger), asyncHandler(async (req, res) => {
+  const personalizationParams = await cchubService.getPersonalizationParameters(req.params.ref)
+  res.json(personalizationParams);
+}));
+
 app.post("/api/prepare-design-template/", logEndpoint(logger), asyncHandler(async (req, res) => {
   const userId = req.body.userId;
   const publicDesignTemplateId = req.body.publicDesignId;

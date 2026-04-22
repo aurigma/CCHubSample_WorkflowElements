@@ -28,7 +28,11 @@ export const SAMPLES = [
         name: "Template Editor", 
         description: "Open Template Editor from your app to modify a public design template. Note, it is supposed that it is used in a custom \"admin\" app rather than in a customer-facing application.", 
         path: "/TemplateEditor" 
+    },
+    {
+        name: "UI Framework",
+        description: "Demonstrates how to embed editor based on UI Framework into your page.",
+        path: "/UIFramework",
     }
-    
-]
+];
 

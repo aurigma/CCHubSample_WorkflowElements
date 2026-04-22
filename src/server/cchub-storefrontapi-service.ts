@@ -125,18 +125,25 @@ export class CCHubStorefrontApiService {
         return new StorefrontUsersApiClient(apiClientConfig);
     }
 
-        /**
+    /**
      * Initializes the API Client for ProjectsApiClient. 
      * 
      * Refer readme.MD in the @aurigma/axios-storefront-api-client package (e.g. in node_modules).
      * 
      * @returns API client for StorefrontUsers controller.
      */
-        private async initProjectsApiClient(): Promise<ProjectsApiClient> {
-            const apiClientConfig = await this.initApiClientConfiguration("Projects_full Private_assets_full");
+    private async initProjectsApiClient(): Promise<ProjectsApiClient> {
+        const apiClientConfig = await this.initApiClientConfiguration("Projects_full Private_assets_full");
             
-            return new ProjectsApiClient(apiClientConfig);
-        }
+        return new ProjectsApiClient(apiClientConfig);
+    }
+
+    async getPersonalizationParameters(ref: string) {
+        const apiClient = await this.initProductReferenceApiClient();
+
+        const { storefrontId, tenantId } = this.config;
+        return apiClient.getPersonalizationParameters(ref, storefrontId, tenantId);
+    }
     
     /**
      * Initializes API Client configuration. 

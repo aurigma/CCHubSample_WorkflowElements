@@ -10,12 +10,12 @@ export class CCHubConfiguration {
 
 
     constructor() {
-        this.baseUrl = process.env["CCHUB_BASEURL"] ?? "https://customerscanvashub.com";
+        this.baseUrl = process.env["VITE_CCHUB_BASEURL"] ?? "https://customerscanvashub.com";
         this.apiUrl = this.baseUrl.replace("://", "://api.");
-        this.storefrontId = Number(process.env["CCHUB_STOREFRONTID"]);
+        this.storefrontId = Number(process.env["VITE_CCHUB_STOREFRONTID"]);
         this.clientId = process.env["CCHUB_CLIENTID"] ?? "";
         this.clientSecret = process.env["CCHUB_CLIENTSECRET"] ?? "";
-        this.tenantId = Number(process.env["CCHUB_TENANTID"]);
+        this.tenantId = Number(process.env["VITE_CCHUB_TENANTID"]);
         this.tokenRefreshTimeBeforeExpirationSec = Number(process.env["CCHUB_TOKENREFRESTIMEBEFOREEXPIRATIONSEC"] ?? 60);
     }
 }
