@@ -22,6 +22,20 @@ const PRODUCT = {
 };
 const ORDER_ID = "42";
 
+const updateConfigForLoadTimeCheck = (config: any) => {
+  const ddeWidget = config.widgets.find(
+    (widget: any) => widget.type === "data-driven-editor",
+  );
+  if (ddeWidget == null) return config;
+
+  ddeWidget.params.onReady = [
+    "{{#function performance.measure('uif_init_duration', 'uif_init_start') }}",
+    "{{#function console.log(`The editor loaded in ${(performance.getEntriesByName('uif_init_duration')[0].duration / 1000).toFixed(2)} seconds`) }}",
+    "{{#function main.showToast({ message: `The editor loaded in ${(performance.getEntriesByName('uif_init_duration')[0].duration / 1000).toFixed(2)} seconds`, duration: 5000 }) }}",
+  ];
+  return config;
+};
+
 const UIFramework = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,10 +44,11 @@ const UIFramework = () => {
     if (!isLoaded) {
       (async () => {
         setIsLoaded(true);
+        performance.mark("uif_init_start");
 
         const personalizationParams =
           await ServerApiService.getPersonalizationParameters(
-            import.meta.env["VITE_PRODUCT_REFERENCE"]
+            import.meta.env["VITE_PRODUCT_REFERENCE"],
           );
 
         const [driverModule, editorModule, token] = await Promise.all([
@@ -43,24 +58,24 @@ const UIFramework = () => {
         ]);
 
         const config = JSON.parse(
-          personalizationParams.workflowContent as string
+          personalizationParams.workflowContent as string,
         );
         const user = getUserData(USER_ID, token);
         const pluginSettings = getPluginSettings(personalizationParams);
         const backOfficeSettings = getBackOfficeSettings(
           personalizationParams,
-          token
+          token,
         );
 
         const eCommerceDriver = await driverModule.init(
           PRODUCT,
           editorModule,
-          config,
+          updateConfigForLoadTimeCheck(config),
           pluginSettings,
           null,
           QUANTITY,
           user,
-          backOfficeSettings
+          backOfficeSettings,
         );
         eCommerceDriver.products.current.renderEditor(containerRef.current);
         eCommerceDriver.cart.onSubmitted.subscribe(async (cart: any) => {
@@ -73,7 +88,7 @@ const UIFramework = () => {
 
           const project = await ServerApiService.saveProject(requestBody);
           alert(
-            `You have successfully created a project ${project.id} (name '${project.name}').`
+            `You have successfully created a project ${project.id} (name '${project.name}').`,
           );
         });
       })();
