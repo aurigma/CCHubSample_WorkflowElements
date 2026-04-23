@@ -16,4 +16,30 @@
         justify-content: center;
         z-index: 9999;
     }
+
+    &__error-icon {
+        width: 48px;
+        height: 48px;
+        border: 2px solid #dc3545;
+        border-radius: 50%;
+        color: #dc3545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 16px;
+    }
+
+    &__error-title {
+        color: #842029;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    &__error-message {
+        color: #842029;
+        max-width: min(520px, 80vw);
+    }
 }

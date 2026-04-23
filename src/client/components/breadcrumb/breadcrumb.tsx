@@ -1,25 +1,20 @@
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import { SAMPLES } from "../../constants/samples";
+import { CodeExampleConfig } from "../../interfaces/server-api";
 
-interface SampleAppBreadcrumbProps { 
-    activeSamplePath: string;
+interface CodeExampleBreadcrumbProps {
+    codeExample: CodeExampleConfig;
 }
 
-const SampleAppBreadcrumb = (props: SampleAppBreadcrumbProps) => {
-  
-    const findSampleTitleByPath = (path: string): string => {
-        const sample = SAMPLES.find(sample => sample.path === path);
-        return sample ? sample.name : "Unknown Sample";
-    }
+const CodeExampleBreadcrumb = (props: CodeExampleBreadcrumbProps) => {
 
   return (
       <Breadcrumb>
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
         <Breadcrumb.Item active>
-          {findSampleTitleByPath(props.activeSamplePath)}
+          {props.codeExample.name}
         </Breadcrumb.Item>
       </Breadcrumb>
   );
 };
 
-export default SampleAppBreadcrumb;
+export default CodeExampleBreadcrumb;

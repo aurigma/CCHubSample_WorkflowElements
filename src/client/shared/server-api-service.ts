@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { GetProductInfoOutput, PrepareDesignTemplate, SaveProjectInput } from "../interfaces/server-api";
+import { CodeExampleConfig, GetProductInfoOutput, PrepareDesignTemplate, SaveProjectInput } from "../interfaces/server-api";
 import { PagedOfProductDto, PersonalizationParametersDto, ProjectDto } from "@aurigma/axios-storefront-api-client";
 
 
@@ -9,6 +9,11 @@ export const getProductList = async (): Promise<PagedOfProductDto> => {
 }
 
 export class ServerApiService {
+
+    static getCodeExamples = async (): Promise<CodeExampleConfig[]> => {
+        const response: AxiosResponse<CodeExampleConfig[]> = await axios.get("/api/code-examples");
+        return response?.data;
+    };
 
     static getStartPersonalizationData = (userId: string) => Promise.all([
         ServerApiService.getToken(userId),
@@ -21,12 +26,8 @@ export class ServerApiService {
         return token;
     };
 
-    static getTemplateEditorPublicDesign = () => import.meta.env["VITE_TEMPLATEEDITOR_CCHUB_PUBLICDESIGNID"]; 
-
     static getProductInfo = async (): Promise<GetProductInfoOutput> => {
         const response: AxiosResponse<GetProductInfoOutput> = await axios.get(`/api/get-product-info/`);
-        response.data.productId = import.meta.env["VITE_BASICSAMPLE_CCHUB_PRODUCTID"]; 
-        
         return response?.data;
     };
 

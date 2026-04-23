@@ -4,9 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -w src/server -x tsx src/server/main.ts",
-    "start": "cross-env NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build"
+    "dev": "npm run build:server && concurrently -k -n TSC,NODE \"npm:dev:server:build\" \"npm:dev:server:run\"",
+    "dev:server:build": "tsc -p tsconfig.server.json --watch --preserveWatchOutput",
+    "dev:server:run": "nodemon -w dist/server --ext js,json --exec node dist/server/main.js",
+    "start": "cross-env NODE_ENV=production node dist/server/main.js",
+    "build": "npm run build:server && vite build",
+    "build:server": "tsc -p tsconfig.server.json"
   },
   "engines": {
     "node": ">=20.17.0"
@@ -14,7 +17,7 @@
   "dependencies": {
     "@aurigma/axios-asset-processor-api-client": "^2.71.1",
     "@aurigma/axios-design-atoms-api-client": "^2.71.1",
-    "@aurigma/axios-storefront-api-client": "^2.63.15",
+    "@aurigma/axios-storefront-api-client": "^2.63.14",
     "@aurigma/design-atoms": "7.1.58",
     "@aurigma/design-atoms-model": "7.0.28",
     "axios": "^1.7.9",
@@ -22,6 +25,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
+    "jsonc-parser": "^3.3.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^18.2.0",
@@ -38,6 +42,7 @@
     "@types/react": "^18.0.38",
     "@types/react-dom": "^18.2.16",
     "@vitejs/plugin-react": "^4.2.0",
+    "concurrently": "^9.2.1",
     "nodemon": "^3.0.1",
     "vite": "^5.0.2"
   }

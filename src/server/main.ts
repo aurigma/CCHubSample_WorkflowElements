@@ -8,6 +8,7 @@ import { CCHubAssetProcessorService } from "./cchub-assetprocessor-service.js";
 import { CCHubStorefrontApiService } from "./cchub-storefrontapi-service.js";
 import { asyncHandler } from "./async-handler.js";
 import { logEndpoint } from "./log-endpoint.js";
+import { CodeExampleConfigurationService } from "./code-example-configuration-service.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -40,6 +41,7 @@ const cchubAuth = new CCHubAuth(config, logger);
 const cchubService = new CCHubStorefrontApiService(config, cchubAuth, logger);
 const designAtomsService = new CCHubDesignAtomsApiService(config, cchubAuth);
 const assetProcessorService = new CCHubAssetProcessorService(config, cchubAuth);
+const codeExampleConfigurationService = new CodeExampleConfigurationService();
 
 logger.info("Obtaining access token on startup...");
 await cchubAuth.getAccessToken(); // obtain an access token beforehand with wide scope for simplicity
@@ -50,6 +52,10 @@ app.get("/api/products", logEndpoint(logger), asyncHandler(async (req, res) => {
   res.json(products);
 }));
 
+app.get("/api/code-examples", logEndpoint(logger), asyncHandler(async (req, res) => {
+  const codeExamples = await codeExampleConfigurationService.getEnabledCodeExamples();
+  res.json(codeExamples);
+}));
 
 app.get("/api/get-token/:userId", logEndpoint(logger), asyncHandler(async (req, res) => {
   const storefrontUserToken = await cchubService.getStorefrontToken(req.params.userId);
