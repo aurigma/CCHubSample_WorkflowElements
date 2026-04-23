@@ -142,7 +142,13 @@ export class CCHubStorefrontApiService {
         const apiClient = await this.initProductReferenceApiClient();
 
         const { storefrontId, tenantId } = this.config;
-        return apiClient.getPersonalizationParameters(ref, storefrontId, tenantId);
+        const results = await apiClient.getPersonalizationParameters(ref, storefrontId, tenantId);
+
+        if (results.apiGatewayUrl?.endsWith("/")) {
+            results.apiGatewayUrl = results.apiGatewayUrl.slice(0, -1);
+        }
+
+        return results;
     }
     
     /**
