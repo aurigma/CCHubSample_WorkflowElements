@@ -29,6 +29,35 @@ const PRODUCT = {
 };
 const ORDER_ID = "42";
 
+const updateConfigForLoadTimeCheck = (config: any) => {
+  const ddeWidget = config.widgets.find(
+    (widget: any) => widget.type === "data-driven-editor",
+  );
+  if (ddeWidget == null) return config;
+
+  ddeWidget.params.onReady = [
+    "{{#function performance.measure('uif_init_duration', 'uif_init_start') }}",
+    "{{#function console.log(`The editor loaded in ${(performance.getEntriesByName('uif_init_duration')[0].duration / 1000).toFixed(2)} seconds`) }}",
+    "{{#function main.showToast({ message: `The editor loaded in ${(performance.getEntriesByName('uif_init_duration')[0].duration / 1000).toFixed(2)} seconds`, duration: 5000 }) }}",
+  ];
+
+  const approveStep = config.steps.find(
+    (step: any) => step.name === "Approve" && Array.isArray(step.onActivate) && step.onActivate != null
+  );
+
+  if (approveStep) {
+    approveStep.onActivate.unshift(
+      "{{#function performance.mark('approve_step_activated')}}");
+    approveStep.onActivate.push(
+      "{{#function performance.measure('time_to_approve_step', 'approve_step_activated') }}",
+      "{{#function console.log(`Time to generate preview: ${(performance.getEntriesByName('time_to_approve_step')[0].duration / 1000).toFixed(2)} seconds`) }}",
+      "{{#function main.showToast({ message: `Time to generate preview: ${(performance.getEntriesByName('time_to_approve_step')[0].duration / 1000).toFixed(2)} seconds`, duration: 5000 }) }}"
+    );
+  }
+
+  return config;
+};
+
 const UIFramework = ({ codeExample }: CodeExamplePageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +69,8 @@ const UIFramework = ({ codeExample }: CodeExamplePageProps) => {
       (async () => {
         try {
           setIsLoaded(true);
+          performance.mark("uif_init_start");
+
           const productReference = getStringParam(codeExample, "productReference");
 
           const personalizationParams =
@@ -64,7 +95,7 @@ const UIFramework = ({ codeExample }: CodeExamplePageProps) => {
           const eCommerceDriver = await driverModule.init(
             PRODUCT,
             editorModule,
-            config,
+            updateConfigForLoadTimeCheck(config),
             pluginSettings,
             null,
             QUANTITY,
@@ -72,7 +103,7 @@ const UIFramework = ({ codeExample }: CodeExamplePageProps) => {
             backOfficeSettings
           );
           const uif = await eCommerceDriver.products.current.renderEditor(containerRef.current);
-          
+
           setIsLoading(true);
 
           eCommerceDriver.cart.onSubmitted.subscribe(async (cart: any) => {
