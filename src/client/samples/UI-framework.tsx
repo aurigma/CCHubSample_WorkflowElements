@@ -81,8 +81,8 @@ const UIFramework = () => {
   }, [isLoaded]);
 
   return (
-    <Container>
-      <div ref={containerRef} />
+    <Container fluid>
+      <div style={{ height: "100vh" }} ref={containerRef} />
     </Container>
   );
 };
