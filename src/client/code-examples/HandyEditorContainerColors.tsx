@@ -4,11 +4,17 @@ import { ServerApiService } from "../shared/server-api-service.js";
 import { handyEditorBasicSampleSettings, handyEditorBasicSampleResources } from "../constants/configuration.js"
 import { getWorkflowElementUrl, WorkflowElementType } from "../shared/urls.js";
 import { Color, ColorSpace, SpotColor } from "@aurigma/design-atoms-model";
+import { CodeExamplePageProps } from "../interfaces/server-api.js";
+import { getNumberParam } from "../shared/code-example-params.js";
+import Preloader from "../components/preloader/Preloader.js";
+import { getErrorMessage } from "../shared/errors.js";
 
 
-const HandyEditorContainerColors = () => {
+const HandyEditorContainerColors = ({ codeExample }: CodeExamplePageProps) => {
 
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const [isComponentLoaded, setIsComponentLoaded] = useState(false);
+    const [loadingError, setLoadingError] = useState<string | null>(null);
     const [unsubscribeFn, setUnsubscribeFn] = useState<{ fn: () => void} >({ fn: () => void 0});
     const [currentColors, setCurrentColors] = useState<Array<Color | SpotColor>>([])
     const userId = "testUserId42";
@@ -18,22 +24,28 @@ const HandyEditorContainerColors = () => {
 
         (async () => {
 
-            // In this sample we illustrate how to load Handy Editor dynamically. 
-            //
-            // Technically, you can just add scripts and styles statically. However, the following
-            // considerations should be taken into account: 
-            // - Having multiple instances of Handy Editor on one page may be a problem. That's why a cleanup is recommended.
-            // - You may want using different editors for different products, that's why you may want dynamically determine 
-            // which script to load. 
-            const [style, script] = await loadWorkflowElement(getWorkflowElementUrl(WorkflowElementType.HandyEditor));
+            try {
+                // In this sample we illustrate how to load Handy Editor dynamically. 
+                //
+                // Technically, you can just add scripts and styles statically. However, the following
+                // considerations should be taken into account: 
+                // - Having multiple instances of Handy Editor on one page may be a problem. That's why a cleanup is recommended.
+                // - You may want using different editors for different products, that's why you may want dynamically determine 
+                // which script to load. 
+                const [style, script] = await loadWorkflowElement(getWorkflowElementUrl(WorkflowElementType.HandyEditor));
 
-            setIsScriptLoaded(true);
+                setIsScriptLoaded(true);
 
-            // Cleanup on component unmount
-            return () => {
-                document.head.removeChild(style);
-                document.body.removeChild(script);
-            };
+                // Cleanup on component unmount
+                return () => {
+                    document.head.removeChild(style);
+                    document.body.removeChild(script);
+                };
+            } catch (error) {
+                if (!isComponentLoaded) {
+                    setLoadingError(getErrorMessage(error));
+                }
+            }
 
         })();
 
@@ -48,6 +60,9 @@ const HandyEditorContainerColors = () => {
         // You may load Handy Editor only once its script is ready.
         if (isScriptLoaded) {
             (async () => {
+
+                try {
+                const productId = getNumberParam(codeExample, "productId");
 
                 // Before you load the editor, you need to capture some data from the backend:
                 // - Get a Storefront User Token so that Handy Editor were able to communicate to Customer's Canvas API
@@ -71,13 +86,20 @@ const HandyEditorContainerColors = () => {
                     configVersion: 2,
                     integration: initIntegrationData(productInfo.tenantId, productInfo.storefrontId, userId, token, productInfo.cchubApiGatewayUrl),
                     input: {
-                        productId: productInfo.productId,
+                        productId,
                     },
                     settings: handyEditorBasicSampleSettings,
                     resources: handyEditorBasicSampleResources
                 });
 
                 // Event handlers
+
+                handyEditor?.addEventListener("error", (e: any) => {
+                    console.log("Handy Editor error", e);
+                    if (!isComponentLoaded) {
+                        setLoadingError("Something went wrong while loading the editor. Please, check dev console for details.");
+                    }
+                });
 
                 /** Use the addtocart event to capture the output data from the editor 
                  * when the user clicks Add to cart.
@@ -107,28 +129,40 @@ const HandyEditorContainerColors = () => {
                 });
 
                 handyEditor?.addEventListener("load", async () => {
-                    const mainContainer = handyEditor.getCurrentContainer();
-                    
-                    if (mainContainer.type === "LimitedColorContainer") {
-                        // Ability to get the list of container colors
-                        const containerColors = await handyEditor.getContainerColors(mainContainer) as Color[];
-                        // Ability to run function every time the container colors are changed
-                        const unsubscribeFn = handyEditor.observeContainerColors(mainContainer, colorContainerChangeCb);
-                        setUnsubscribeFn({ fn: unsubscribeFn});
+                    try {
+                        setIsComponentLoaded(true);
+                        const mainContainer = handyEditor.getCurrentContainer();
+                        
+                        if (mainContainer.type === "LimitedColorContainer") {
+                            // Ability to get the list of container colors
+                            const containerColors = await handyEditor.getContainerColors(mainContainer) as Color[];
+                            // Ability to run function every time the container colors are changed
+                            const unsubscribeFn = handyEditor.observeContainerColors(mainContainer, colorContainerChangeCb);
+                            setUnsubscribeFn({ fn: unsubscribeFn});
 
-                        // A method which replaces the specified design color by another value
-                        const oldColor = containerColors[0];
-                        const newColor = containerColors[2];
-                        await handyEditor.recolorContainerItems(mainContainer,{ from: oldColor, to: newColor })
+                            // A method which replaces the specified design color by another value
+                            const oldColor = containerColors[0];
+                            const newColor = containerColors[2];
+                            await handyEditor.recolorContainerItems(mainContainer,{ from: oldColor, to: newColor })
 
-                        // Ability to getLineItem by method
-                        const lineItem = await handyEditor.getLineItem();
-                        console.log(lineItem);
+                            // Ability to getLineItem by method
+                            const lineItem = await handyEditor.getLineItem();
+                            console.log(lineItem);
+                        }
+                    } catch (error) {
+                        if (!isComponentLoaded) {
+                            setLoadingError(getErrorMessage(error));
+                        }
                     }
                 });
+                } catch (error) {
+                    if (!isComponentLoaded) {
+                        setLoadingError(getErrorMessage(error));
+                    }
+                }
             })()
         }
-    }, [isScriptLoaded, colorContainerChangeCb]);
+    }, [isScriptLoaded, colorContainerChangeCb, codeExample]);
 
     const editHandlerFn = useCallback((color: Color) => {
         const handyEditor = document.querySelector("au-handy-editor") as any;
@@ -147,19 +181,22 @@ const HandyEditorContainerColors = () => {
     });
 
     return (
-        <au-handy-editor>
-            <div rightpanelheader="true">Container colors:</div>
-            <div rightpanelcontent="true">
-                {
-                    currentColors.map((color) => 
-                        <div>
-                            <span>{color.colorSpace === ColorSpace.Spot ? (color as SpotColor).ink.name : color.toString()} - </span>
-                            <span className="color-change-button" onClick={() => editHandlerFn(color)}>edit</span>
-                        </div>
-                    )
-                }
-            </div>
-        </au-handy-editor>
+        <>
+            <Preloader isActive={!isComponentLoaded || !!loadingError} isError={!!loadingError} errorMessage={loadingError ?? undefined}></Preloader>
+            <au-handy-editor>
+                <div rightpanelheader="true">Container colors:</div>
+                <div rightpanelcontent="true">
+                    {
+                        currentColors.map((color) => 
+                            <div>
+                                <span>{color.colorSpace === ColorSpace.Spot ? (color as SpotColor).ink.name : color.toString()} - </span>
+                                <span className="color-change-button" onClick={() => editHandlerFn(color)}>edit</span>
+                            </div>
+                        )
+                    }
+                </div>
+            </au-handy-editor>
+        </>
     );
 }
 

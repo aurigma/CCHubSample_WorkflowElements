@@ -1,0 +1,75 @@
+[
+  // Product-based Simple Editor code example.
+  {
+    "name": "Basic Simple Editor Sample",
+    "description": "Embed Simple Editor to a page, open a product in it, and save results as a project once you finish editing.",
+    "path": "/SimpleEditorBasic",
+    "enabled": true,
+    "params": {
+      // Customer's Canvas Hub product ID.
+      "productId": 123
+    }
+  },
+  // Product-based Simple Editor code example with Plugin API interactions.
+  {
+    "name": "Simple Editor with Plugin Api Sample",
+    "description": "When a product is loaded, use Simple Editor Plugin API to get an access to the design object model and modify it on the fly - convert the item container to Colorless for the Engraving printing technique.",
+    "path": "/SimpleEditorWithPluginApi",
+    "enabled": true,
+    "params": {
+      "productId": 123
+    }
+  },
+  // Product-based Handy Editor code example.
+  {
+    "name": "Basic Handy Editor Sample",
+    "description": "Embed Handy Editor to a page, open a product in it, and save results as a project once you finish editing.",
+    "path": "/HandyEditorBasic",
+    "enabled": true,
+    "params": {
+      "productId": 123
+    }
+  },
+  // Handy Editor code example without PIM. Mockup IDs are JSON arrays, not comma-separated strings.
+  {
+    "name": "Handy Editor with no PIM",
+    "description": "Embed Handy Editor using just design and mockup ids (no PIM involved to configure the editor).",
+    "path": "/HandyEditorNoPIM",
+    "enabled": true,
+    "params": {
+      "publicDesignId": "id",
+      "editorMockupIds": ["id1", "id2"],
+      "previewMockupIds": ["id1", "id2"]
+    }
+  },
+  // Product-based Handy Editor code example demonstrating container color APIs.
+  {
+    "name": "Handy Editor with container colors interaction",
+    "description": "Demonstrates how to embed Handy Editor to a page and interact with container colors.",
+    "path": "/HandyEditorContainerColors",
+    "enabled": true,
+    "params": {
+      "productId": 123
+    }
+  },
+  // Back-office Template Editor code example.
+  {
+    "name": "Template Editor",
+    "description": "Open Template Editor from your app to modify a public design template. Note, it is supposed that it is used in a custom \"admin\" app rather than in a customer-facing application.",
+    "path": "/TemplateEditor",
+    "enabled": true,
+    "params": {
+      "publicDesignId": "id"
+    }
+  },
+  // UI Framework code example. productReference is resolved through the Storefront API.
+  {
+    "name": "UI Framework",
+    "description": "Demonstrates how to embed editor based on UI Framework into your page.",
+    "path": "/UIFramework",
+    "enabled": true,
+    "params": {
+      "productReference": "reference"
+    }
+  }
+]
